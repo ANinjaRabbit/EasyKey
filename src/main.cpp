@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdio>
 #include <cstring>
+#include <climits>
 using namespace std;
 
 void addKeybindLine(bool neovim, bool recursive, bool insertmode, bool normalmode, bool visualmode);
@@ -99,9 +100,10 @@ void addKeybindLine(bool neovim, bool recursive, bool insertmode, bool normalmod
 	{
 		whatMode = 3;
 	}
-	
+        cin.sync(); 
 	cout << "Please enter the key: ";
 	cin >> key;
+	cin.sync();
 	cout << "Please enter the command: ";
 	cin >> cmd;
 	
@@ -117,38 +119,36 @@ void addKeybindLine(bool neovim, bool recursive, bool insertmode, bool normalmod
 	
 	if (recursive == true && whatMode == 0)
 	{
-		merged = "map "+ key, " "+ cmd;
+	  merged = "map "+key+ " "+ cmd;
 	}
 	else if (recursive == false && whatMode == 0)
 	{
-		merged = "noremap ", key, " ", cmd;
+		merged = "noremap "+ key+ " "+ cmd;
 	}
 	else if (recursive == true && whatMode == 1)
 	{
-		merged = "imap ", key, " ", cmd;
+		merged = "imap "+ key+ " "+ cmd;
 	}
 	else if (recursive == false && whatMode == 1)
 	{
-		merged = "inoremap ", key, " ", cmd;
+		merged = "inoremap "+ key+ " "+ cmd;
 	}
 	else if (recursive == true && whatMode == 2)
 	{
-		merged = "nmap ", key, " ", cmd;
+		merged = "nmap "+ key+ " "+ cmd;
 	}
 	else if (recursive == false && whatMode == 2)
 	{
-		merged = "nnoremap ", key, " ", cmd;
+		merged = "nnoremap "+ key+ " "+ cmd;
 	}
 	else if (recursive == true && whatMode == 3)
 	{
-		merged = "vmap ", key, " ", cmd;
+		merged = "vmap "+ key+ " "+ cmd;
 	}
 	else if (recursive == false && whatMode == 3)
 	{
-		merged = "vnoremap", key, " ", cmd;
+		merged = "vnoremap "+ key+ " "+ cmd;
 	}
 	
-	sed = "sed -i '$a\\"+merged+"' "+cfgpath;
-	
-	cout << sed << endl;
+	cout<< "sed -i '$a\\"<<merged<<"' "<<cfgpath<<endl;
 }
