@@ -80,7 +80,6 @@ void addKeybindLine(bool neovim, bool recursive, bool insertmode, bool normalmod
 	string key;
 	string cmd;
 	string cfgpath;
-	string sed;
 	string merged;
 	int whatMode; // 0 means all mode, 1 means insert, 2 means normal, 3 means visual
 	
