@@ -63,7 +63,7 @@ int main(int argc, char *argv[])
 	      exit(1);
 	    }
 	}
-	if(!(has_used[0]&&has_used[2]))
+	if(!has_used[0])
 	{
 	      cout<<"option error\n";
 	      cout << help << endl;
@@ -117,7 +117,7 @@ void addKeybindLine(bool neovim, bool recursive, bool insertmode, bool normalmod
 	
 	if (recursive == true && whatMode == 0)
 	{
-		merged = "map ", key, " ", cmd;
+		merged = "map "+ key, " "+ cmd;
 	}
 	else if (recursive == false && whatMode == 0)
 	{
