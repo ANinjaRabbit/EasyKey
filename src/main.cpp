@@ -7,14 +7,13 @@ void addKeybindLine(bool neovim, bool recursive, bool insertmode, bool normalmod
 
 int main(int argc, char *argv[])
 {
-	string help = "Usage: vimek <vim-distro> [options]\nPlease arrange the parameters in order, otherwise it will not be recognized!\n\nOptions:\n    --n: Choose NeoVim\n    --v: Choose Vim\n    -v: Print version & copyright messages\n\n    -m: Non-recursive, like add a 'nore' before 'map'\n    -i: Make the key in INSERT MODE only\n    -n: Make the key in NORMAL MODE only\n    -l: Make the key in VISUAL MODE only";
+	string help = "Usage: vimek <vim-distro> [options]\nYou needn't arrange the parameters in order.\n\nOptions:\n    --n: Choose NeoVim\n    --v: Choose Vim\n    -v: Print version & copyright messages\n\n    -m: Non-recursive, like add a 'nore' before 'map'\n    -i: Make the key in INSERT MODE only\n    -n: Make the key in NORMAL MODE only\n    -l: Make the key in VISUAL MODE only";
 	bool neovim;
 	bool recursive = true;
 	bool insertmode = false;
 	bool normalmode = false;
 	bool visualmode = false;
-	
-	if (argc <= 1)
+	if (argc <= 1||argc > 4)
 	{
 		cout << help << endl;
 		exit(1);
@@ -24,38 +23,53 @@ int main(int argc, char *argv[])
 		cout << help << endl;
 		exit(0);
 	}
-	
-	if (strcmp(argv[1], "--n") == 0)
+	bool has_used[3] = {false,false,false};
+	for(int i = 1;i < argc;i++)
 	{
-		neovim = true;
+	  if (strcmp(argv[i], "--n") == 0&& !has_used[0])
+	    {
+	      neovim = true;
+	      has_used[0] = 1;
+	    }
+	  else if (strcmp(argv[i], "--v") == 0&&!has_used[0])
+	    {
+	      neovim = false;
+	      has_used[0] = 1;
+	    }
+	  else if (strcmp(argv[i], "-m") == 0&&!has_used[1])
+	    {
+	      recursive = false;
+	      has_used[1] = 1;
+	    }
+	  else if (strcmp(argv[i], "-i") == 0&&!has_used[2])
+	    {
+	      insertmode = true;
+	      has_used[2] = 1;
+	    }
+	  else if (strcmp(argv[i], "-n") == 0 && !has_used[2])
+	    {
+	      normalmode = true;
+	      has_used[2] = 1;
+	    }
+	  else if (strcmp(argv[i], "-l") == 0 && !has_used[2])
+	    {
+	      visualmode = true;
+	      has_used[2] = 1;
+	    }
+	  else
+	    {
+	      cout<<"option error\n";
+	      cout << help << endl;
+	      exit(1);
+	    }
 	}
-	else if (strcmp(argv[1], "--v") == 0)
+	if(!has_used[0])
 	{
-		neovim = false;
+	      cout<<"option error\n";
+	      cout << help << endl;
+	      exit(1);
 	}
-	else
-	{
-		cout << help << endl;
-		exit(1);
-	}
-	
-	if (strcmp(argv[2], "-m") == 0)
-	{
-		recursive = false;
-	}
-	else if (strcmp(argv[2, 3], "-i") == 0)
-	{
-		insertmode = true;
-	}
-	else if (strcmp(argv[2, 3], "-n") == 0)
-	{
-		normalmode = true;
-	}
-	else if (strcmp(argv[2, 3], "-l") == 0)
-	{
-		visualmode = true;
-	}
-	
+	  
 	addKeybindLine(neovim, recursive, insertmode, normalmode, visualmode);
 	return 0;
 }
@@ -103,7 +117,7 @@ void addKeybindLine(bool neovim, bool recursive, bool insertmode, bool normalmod
 	
 	if (recursive == true && whatMode == 0)
 	{
-		merged = "map ", key, " ", cmd;
+		merged = "map "+ key, " "+ cmd;
 	}
 	else if (recursive == false && whatMode == 0)
 	{
@@ -134,7 +148,7 @@ void addKeybindLine(bool neovim, bool recursive, bool insertmode, bool normalmod
 		merged = "vnoremap", key, " ", cmd;
 	}
 	
-	sed = "sed -i '$a\\",merged , "' ", cfgpath;
+	sed = "sed -i '$a\\"+merged+"' "+cfgpath;
 	
 	cout << sed << endl;
 }
